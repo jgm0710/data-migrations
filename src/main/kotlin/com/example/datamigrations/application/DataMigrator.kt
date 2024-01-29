@@ -3,6 +3,7 @@ package com.example.datamigrations.application
 import com.example.datamigrations.domain.ConnectionSetting
 import com.example.datamigrations.domain.DataMigrationSetting
 import com.example.datamigrations.domain.DatasourceFactory
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
 
@@ -32,15 +33,24 @@ class DataMigrator(
                 resultMap
             }
 
-            for (map in resultMaps) {
-                println(map)
-            }
+            val parameterSources = resultMaps.map { resultMap ->
+                val mapSqlParameterSource = MapSqlParameterSource()
+
+                for (dataMap in to.dataMaps) {
+
+                    resultMap[]
+                }
+                // resultMap의 데이터를 이용하여 파라미터 설정
+                // 예시: mapSqlParameterSource.addValue("columnName", resultMap["key"])
+                mapSqlParameterSource
+            }.toTypedArray()
 
             val toJdbcTemplate = NamedParameterJdbcTemplate(toDataSource)
-            for (dataMap in to.dataMaps) {
 
-            }
-            toJdbcTemplate.batchUpdate(to.query)
+            toJdbcTemplate.batchUpdate(
+                to.query,
+                parameterSources,
+            )
         } finally {
             Thread.sleep(1000)
             fromDataSource.connection.close()

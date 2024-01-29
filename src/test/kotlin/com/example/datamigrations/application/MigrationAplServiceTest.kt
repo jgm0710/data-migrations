@@ -27,7 +27,7 @@ class MigrationAplServiceTest {
     fun name() {
         val from = DataMigrationSetting(
             query = "select * from order_settlement limit 10;",
-            dataMaps = setOf(
+            dataMaps = listOf(
                 DataMap(
                     fromKey = "id",
                     toKey = "identifier",
