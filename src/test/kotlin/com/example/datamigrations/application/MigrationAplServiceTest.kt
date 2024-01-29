@@ -33,24 +33,21 @@ class MigrationAplServiceTest {
                 DataMap(
                     fromKey = "id",
                     toKey = "identifier",
-                    invokeFixedValue = { null },
                 ),
                 DataMap(
                     fromKey = "order_id",
                     toKey = "orderId",
-                    invokeFixedValue = { null },
                 ),
                 DataMap(
                     fromKey = "status",
                     toKey = "status",
-                    invokeFixedValue = { null },
                 ),
             ),
         )
 
         val to = DataMigrationSetting(
             query = "insert into test_order_settlement (identifier, order_settlement_id, order_id, status, created_date)\n" +
-                "values (:identifier, :order_settlement_id, :order_id, :status, :created_date);",
+                "values (:identifier, :order_settlement_id, :order_id, :status, :created_date) ;",
             dataMaps = listOf(
                 DataMap(
                     fromKey = null,
@@ -60,17 +57,14 @@ class MigrationAplServiceTest {
                 DataMap(
                     fromKey = "identifier",
                     toKey = "order_settlement_id",
-                    invokeFixedValue = { null },
                 ),
                 DataMap(
                     fromKey = "orderId",
                     toKey = "order_id",
-                    invokeFixedValue = { null },
                 ),
                 DataMap(
                     fromKey = "status",
                     toKey = "status",
-                    invokeFixedValue = { null },
                 ),
                 DataMap(
                     fromKey = null,
