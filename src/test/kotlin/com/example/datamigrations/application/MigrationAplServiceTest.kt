@@ -55,7 +55,7 @@ class MigrationAplServiceTest {
                 DataMap(
                     fromKey = null,
                     toKey = "identifier",
-                    invokeFixedValue = UUID::randomUUID,
+                    invokeFixedValue = { UUID.randomUUID() },
                 ),
                 DataMap(
                     fromKey = "identifier",
@@ -75,7 +75,7 @@ class MigrationAplServiceTest {
                 DataMap(
                     fromKey = null,
                     toKey = "created_date",
-                    invokeFixedValue = OffsetDateTime::now,
+                    invokeFixedValue = { OffsetDateTime.now() },
                 ),
             ),
         )

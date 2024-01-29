@@ -4,7 +4,6 @@ import com.example.datamigrations.domain.ConnectionSetting
 import com.example.datamigrations.domain.DataMap
 import com.example.datamigrations.domain.DataMigrationSetting
 import com.example.datamigrations.domain.DatasourceFactory
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.sql.ResultSet
 
@@ -38,25 +37,25 @@ class DataMigrator(
             }
 
             val parameterSources = resultMaps.map { resultMap ->
-                val mapSqlParameterSource = MapSqlParameterSource()
+                val insertMaps: MutableMap<String, Any?> = mutableMapOf()
 
                 for (dataMap: DataMap in to.dataMaps) {
                     val fromKey: String? = dataMap.fromKey
                     val toKey: String? = dataMap.toKey
-                    val fixedValue: Any? = dataMap.invokeFixedValue
+                    val fixedValue: Any? = dataMap.invokeFixedValue()
 
                     if (toKey == null) {
                         continue
                     }
 
                     if (fromKey != null) {
-                        mapSqlParameterSource.addValue(toKey, resultMap[fromKey])
+                        insertMaps[toKey] = resultMap[fromKey]
                     } else {
-                        mapSqlParameterSource.addValue(toKey, fixedValue)
+                        insertMaps[toKey] = fixedValue
                     }
                 }
 
-                mapSqlParameterSource
+                insertMaps
             }.toTypedArray()
 
             val toJdbcTemplate = NamedParameterJdbcTemplate(toDataSource)
