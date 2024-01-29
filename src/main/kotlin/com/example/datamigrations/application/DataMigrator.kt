@@ -1,6 +1,7 @@
 package com.example.datamigrations.application
 
 import com.example.datamigrations.domain.ConnectionSetting
+import com.example.datamigrations.domain.DataMap
 import com.example.datamigrations.domain.DataMigrationSetting
 import com.example.datamigrations.domain.DatasourceFactory
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -28,7 +29,10 @@ class DataMigrator(
                 val resultMap = mutableMapOf<String, Any>()
                 for (dataMap in from.dataMaps) {
                     val any = rs.getObject(dataMap.fromKey)
-                    resultMap[dataMap.toKey] = any
+                    val toKey = dataMap.toKey
+                    if (toKey != null) {
+                        resultMap[toKey] = any
+                    }
                 }
                 resultMap
             }
@@ -36,12 +40,22 @@ class DataMigrator(
             val parameterSources = resultMaps.map { resultMap ->
                 val mapSqlParameterSource = MapSqlParameterSource()
 
-                for (dataMap in to.dataMaps) {
+                for (dataMap: DataMap in to.dataMaps) {
+                    val fromKey: String? = dataMap.fromKey
+                    val toKey: String? = dataMap.toKey
+                    val fixedValue: Any? = dataMap.invokeFixedValue
 
-                    resultMap[]
+                    if (toKey == null) {
+                        continue
+                    }
+
+                    if (fromKey != null) {
+                        mapSqlParameterSource.addValue(toKey, resultMap[fromKey])
+                    } else {
+                        mapSqlParameterSource.addValue(toKey, fixedValue)
+                    }
                 }
-                // resultMap의 데이터를 이용하여 파라미터 설정
-                // 예시: mapSqlParameterSource.addValue("columnName", resultMap["key"])
+
                 mapSqlParameterSource
             }.toTypedArray()
 
