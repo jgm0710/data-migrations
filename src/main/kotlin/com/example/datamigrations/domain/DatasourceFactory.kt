@@ -20,4 +20,13 @@ object DatasourceFactory {
 
         return hikariDataSource
     }
+
+    fun createDatasource(connectionSetting: ConnectionSetting): DataSource {
+        return createDatasource(
+            jdbcUrl = connectionSetting.jdbcUrl,
+            username = connectionSetting.username,
+            password = connectionSetting.password,
+            poolName = connectionSetting.poolName,
+        )
+    }
 }
